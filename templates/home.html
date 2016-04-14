@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block head_title %}Welcome | {{ block.super }}{% endblock %}
+
+<style>
+{% block style %}
+.navbar-static-top {
+	margin-bottom: 0px !important;
+}
+
+.jumbotron {
+	background-color:#0E3D14;
+	color: #FFF;
+}
+
+{% endblock %}
+</style>
+
+
+
+{% block jumbotron %}
+ {% if not request.user.is_authenticated %}
+
+<div class="jumbotron">
+ <div class="container">
+	<div class="row">
+		<div class='col-sm-6'>
+		<h2>'A person who never made a mistake, never tried anything' - Albert Einstein</h1>
+		</div>
+		<div class='col-sm-6' >
+			<!-- <iframe width="500" height="290" src="https://www.youtube.com/embed/2uLYO1LUf6Q" frameborder="0" allowfullscreen></iframe> -->
+			<img src="https://www.britishcouncil.org/sites/default/files/styles/bc-landscape-630x354/public/global-connections.png?itok=eMD-BeLF" height="290" width="500">
+ 		</div>
+		</div>
+	</div>
+ </div>
+ {% endif %}
+{% endblock %}
+
+
+
+
+{% block content %}
+ {% if request.user.is_authenticated %}
+<h1>You are logged in!</h1>
+
+	{% if queryset %}
+	<h2>Welcome Staff</h2>
+	<table class='table'>
+	{% for instance in queryset %}
+		<tr><td>{{ forloop.counter }}</td><td>{{ instance.email }}</td><td>{{ instance.full_name }}</td><td>{{ instance.timestamp|timesince }} ago</td></tr>
+		{% if instance.email == "abc@gmail.edu" %}
+		<tr><td>is equal</td></tr>
+		{% endif %}
+	{% endfor %}
+	</table>
+
+	{% endif %}
+
+ {% else %}
+<div class="row">
+
+  <div class="col-sm-3 pull-right">
+
+			<p class='lead text-align-center'>{{ title }}</p>
+
+			<form method='POST' action=''>{% csrf_token %}
+			{{ form|crispy }}
+
+			<input class='btn btn-primary' type='submit' value='Sign Up' />
+
+			</form>
+	</div>
+
+
+</div>
+{% endif %}
+
+{% endblock %}
